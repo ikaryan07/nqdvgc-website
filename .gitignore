@@ -1,0 +1,11 @@
+# Raw source images in root (not part of the website)
+/*.jpg
+/*.jpeg
+
+# Build scripts
+build_brief_pdf.py
+
+# OS files
+Thumbs.db
+.DS_Store
+desktop.ini
