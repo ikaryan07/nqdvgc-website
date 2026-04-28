@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(function() {
           msg.style.display = 'block'; msg.style.color = '#8b2020';
-          msg.textContent = 'Something went wrong. Please try emailing us directly at info@nqdefenceveteransgolf.org.au';
+          msg.textContent = 'Something went wrong. Please try emailing us directly at nqdefenceveteransgc@gmail.com';
         })
         .finally(function() { btn.textContent = origText; btn.disabled = false; });
     });
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(() => {
         regMsg.style.display = 'block';
         regMsg.style.color = '#8b2020';
-        regMsg.textContent = 'Something went wrong. Please try again or contact us directly at info@nqdefenceveteransgolf.org.au';
+        regMsg.textContent = 'Something went wrong. Please try again or contact us directly at nqdefenceveteransgc@gmail.com';
       })
       .finally(() => {
         submitBtn.textContent = originalText;
