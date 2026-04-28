@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Membership | NQ Defence Veterans Golf Club Inc.</title>
+<meta name="description" content="Join NQ Defence Veterans Golf Club Inc. — membership application form for defence veterans in Townsville and North Queensland.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Membership | NQ Defence Veterans Golf Club Inc.">
+<meta property="og:description" content="Apply to join NQ Defence Veterans Golf Club — $50 annual membership for defence veterans in North Queensland.">
+<meta property="og:image" content="images/group-photo.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Source+Sans+3:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="css/styles.css">
+<noscript><style>.reveal{opacity:1!important;transform:none!important;}</style></noscript>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="index.html" class="logo">
+      <div class="logo-mark"><img src="images/logo.png" alt="NQDVGC Logo"></div>
+      <div class="logo-name">NQ Defence Veterans<br>Golf Club Inc.<small>Townsville, QLD</small></div>
+    </a>
+    <button class="hamburger" id="menuBtn" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="committee.html">Committee</a></li>
+      <li><a href="sponsors.html">Sponsors</a></li>
+      <li><a href="membership.html" class="active">Membership</a></li>
+      <li><a href="contact.html" class="btn-cta">Contact Us</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="page-header has-bg" id="main" style="background: linear-gradient(160deg, rgba(15,28,42,0.85), rgba(74,93,58,0.8)), url('images/group-photo.png') center/cover no-repeat;">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Membership</div>
+    <h1>JOIN THE CLUB</h1>
+    <p>Become a member of NQ Defence Veterans Golf Club.</p>
+  </div>
+</section>
+
+<!-- Membership Info -->
+<section style="padding: var(--pad) 0;">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-label">Membership</div>
+      <h2 class="sec-title">Membership Application</h2>
+      <p class="sec-desc">Annual membership is <strong>$50.00</strong>. Fill out the form below and pay via bank transfer to complete your application.</p>
+    </div>
+
+    <div class="membership-payment reveal" style="background: var(--sand); border-radius: 12px; padding: 28px 32px; margin-bottom: 36px; max-width: 600px; margin-left: auto; margin-right: auto; text-align: center;">
+      <h3 style="font-family: var(--font-display); font-size: 20px; color: var(--navy); margin-bottom: 12px;">Payment Details</h3>
+      <p style="margin-bottom: 6px;"><strong>Account Name:</strong> NQ Defence Veterans Golf Club Inc</p>
+      <p style="margin-bottom: 6px;"><strong>BSB:</strong> 833-205</p>
+      <p style="margin-bottom: 6px;"><strong>Account Number:</strong> 20862889</p>
+      <p style="margin-top: 12px; font-size: 15px; color: var(--text-mid);">Please use your full name as the payment reference.</p>
+    </div>
+
+    <form id="membershipForm" action="https://formsubmit.co/nqdefenceveteransgc@gmail.com" method="POST" style="max-width: 700px; margin: 0 auto;" class="reveal">
+      <input type="hidden" name="_subject" value="New Membership Application — NQDVGC Website">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+
+      <div class="f-row">
+        <div class="f-group">
+          <label for="mFullName">Full Name *</label>
+          <input type="text" id="mFullName" name="Full Name" required placeholder="Your full name">
+        </div>
+        <div class="f-group">
+          <label for="mDob">Date of Birth *</label>
+          <input type="date" id="mDob" name="Date of Birth" required>
+        </div>
+      </div>
+
+      <div class="f-group">
+        <label for="mAddress">Street Address *</label>
+        <input type="text" id="mAddress" name="Street Address" required placeholder="123 Example Street">
+      </div>
+
+      <div class="f-row">
+        <div class="f-group">
+          <label for="mSuburb">Suburb *</label>
+          <input type="text" id="mSuburb" name="Suburb" required placeholder="Townsville">
+        </div>
+        <div class="f-group">
+          <label for="mPostcode">Post Code *</label>
+          <input type="text" id="mPostcode" name="Post Code" required placeholder="4810">
+        </div>
+      </div>
+
+      <div class="f-row">
+        <div class="f-group">
+          <label for="mPhone">Phone Number *</label>
+          <input type="tel" id="mPhone" name="Phone Number" required placeholder="04XX XXX XXX">
+        </div>
+        <div class="f-group">
+          <label for="mEmail">Email *</label>
+          <input type="email" id="mEmail" name="Email" required placeholder="you@example.com">
+        </div>
+      </div>
+
+      <div class="f-row">
+        <div class="f-group">
+          <label for="mGolfClub">Current or Previous Golf Club <span style="font-weight:400;color:var(--text-mid);font-size:14px;">(optional)</span></label>
+          <input type="text" id="mGolfClub" name="Golf Club" placeholder="e.g. Tropics Golf Club">
+        </div>
+        <div class="f-group">
+          <label for="mGolfLink">Golf Link No. <span style="font-weight:400;color:var(--text-mid);font-size:14px;">(optional)</span></label>
+          <input type="text" id="mGolfLink" name="Golf Link No" placeholder="e.g. 301XXXXX">
+        </div>
+      </div>
+
+      <div class="f-row">
+        <div class="f-group">
+          <label for="mService">Branch of Service *</label>
+          <select id="mService" name="Service" required>
+            <option value="">Select...</option>
+            <option value="Army">Army</option>
+            <option value="Air Force">Air Force</option>
+            <option value="Navy">Navy</option>
+          </select>
+        </div>
+        <div class="f-group">
+          <label for="mShirt">Shirt Size *</label>
+          <select id="mShirt" name="Shirt Size" required>
+            <option value="">Select...</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+            <option value="2XL">2XL</option>
+            <option value="3XL">3XL</option>
+            <option value="4XL">4XL</option>
+            <option value="5XL">5XL</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="f-row">
+        <div class="f-group">
+          <label for="mEmergencyName">Emergency Contact Name *</label>
+          <input type="text" id="mEmergencyName" name="Emergency Contact" required placeholder="Full name">
+        </div>
+        <div class="f-group">
+          <label for="mEmergencyPhone">Emergency Contact Phone *</label>
+          <input type="tel" id="mEmergencyPhone" name="Emergency Phone" required placeholder="04XX XXX XXX">
+        </div>
+      </div>
+
+      <div class="f-group" style="margin-top: 20px; padding: 20px; background: var(--sand); border-radius: 8px;">
+        <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; font-weight: 400; font-size: 15px; line-height: 1.5;">
+          <input type="checkbox" id="mAgree" name="Declaration Agreed" value="Yes" required style="margin-top: 4px; min-width: 20px; min-height: 20px;">
+          I agree to abide by the Club's rules and regulations. I acknowledge that upon cessation of membership, I shall not be entitled to any refund of my membership subscription. I agree to pay the applicable membership fee in full.
+        </label>
+      </div>
+
+      <div class="f-group" style="margin-top: 8px; padding: 16px 20px; background: var(--sand); border-radius: 8px;">
+        <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; font-weight: 400; font-size: 14px; line-height: 1.5; color: var(--text-mid);">
+          <input type="checkbox" id="mPrivacy" name="Privacy Consent" value="Yes" required style="margin-top: 4px; min-width: 20px; min-height: 20px;">
+          I consent to NQ Defence Veterans Golf Club collecting and using my personal information as described in the Privacy Disclosure Statement to process my membership and provide membership services.
+        </label>
+      </div>
+
+      <input type="hidden" name="_cc" id="mCc">
+
+      <button type="submit" class="f-submit" style="margin-top: 24px; width: 100%;">Submit Membership Application</button>
+      <div id="membershipMsg" style="margin-top: 16px; display: none; padding: 14px; border-radius: 8px; text-align: center; font-weight: 600;"></div>
+    </form>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">
+          <div class="logo-mark"><img src="images/logo.png" alt="NQDVGC Logo"></div>
+          <div class="logo-name">NQ Defence Veterans<br>Golf Club Inc.<small>Townsville, QLD</small></div>
+        </a>
+        <p>A not-for-profit community for defence veterans and their families in North Queensland.</p>
+      </div>
+      <div>
+        <h4>Club</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="events.html">Events</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="committee.html">Committee</a></li>
+          <li><a href="sponsors.html">Sponsors</a></li>
+          <li><a href="membership.html">Membership</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://www.openarms.gov.au" target="_blank" rel="noopener">Open Arms</a></li>
+          <li><a href="https://www.dva.gov.au" target="_blank" rel="noopener">DVA</a></li>
+          <li><a href="https://www.rslqld.org" target="_blank" rel="noopener">RSL Queensland</a></li>
+          <li><a href="https://www.soldieron.org.au" target="_blank" rel="noopener">Soldier On</a></li>
+          <li><a href="https://www.golf.org.au" target="_blank" rel="noopener">Golf Australia</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="https://maps.google.com/?q=16+Nineteenth+Avenue+Kirwan+QLD+4817" target="_blank" rel="noopener">16 Nineteenth Ave, Kirwan QLD 4817</a></li>
+          <li><a href="mailto:nqdefenceveteransgc@gmail.com">nqdefenceveteransgc@gmail.com</a></li>
+          <li><a href="https://www.facebook.com/groups/980650744252783" target="_blank" rel="noopener">Facebook</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 NQ Defence Veterans Golf Club Inc.</span>
+      <span>Not-for-Profit Organisation &middot; Townsville, QLD</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+(function() {
+  var form = document.getElementById('membershipForm');
+  if (!form) return;
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var msg = document.getElementById('membershipMsg');
+    var emailField = document.getElementById('mEmail');
+    var ccField = document.getElementById('mCc');
+    var nameField = document.getElementById('mFullName');
+
+    // Copy applicant's email to _cc so they get a copy
+    if (emailField && ccField) ccField.value = emailField.value;
+
+    var btn = form.querySelector('.f-submit');
+    var origText = btn.textContent;
+    btn.textContent = 'Submitting...';
+    btn.disabled = true;
+
+    var formData = new FormData(form);
+    fetch(form.action, { method: 'POST', body: formData, headers: { 'Accept': 'application/json' } })
+      .then(function(r) {
+        if (r.ok) {
+          msg.style.display = 'block';
+          msg.style.color = '#4a5d3a';
+          msg.style.background = 'rgba(74,93,58,0.1)';
+          msg.textContent = '\u2713 Thanks ' + (nameField.value || '') + '! Your membership application has been submitted. A copy has been sent to your email. Please complete your $50 bank transfer to finalise.';
+          form.reset();
+        } else { throw new Error('Failed'); }
+      })
+      .catch(function() {
+        msg.style.display = 'block';
+        msg.style.color = '#8b2020';
+        msg.style.background = 'rgba(139,32,32,0.1)';
+        msg.textContent = 'Something went wrong. Please try again or email us directly at nqdefenceveteransgc@gmail.com';
+      })
+      .finally(function() { btn.textContent = origText; btn.disabled = false; });
+  });
+})();
+</script>
+</body>
+</html>
