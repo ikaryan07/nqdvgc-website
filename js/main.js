@@ -12,6 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
       navLinks.classList.remove('open');
       menuBtn.setAttribute('aria-expanded', 'false');
     }));
+    document.addEventListener('click', function(e) {
+      if (navLinks.classList.contains('open') && !navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
+        navLinks.classList.remove('open');
+        menuBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
   }
 
   // Scroll reveal
@@ -164,6 +170,28 @@ document.addEventListener('DOMContentLoaded', () => {
   btt.addEventListener('click', function() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
+
+  // Auto-hide past events
+  (function() {
+    var today = new Date();
+    today.setHours(23, 59, 59, 999);
+    var todayStr = today.toISOString().slice(0, 10);
+
+    document.querySelectorAll('[data-date]').forEach(function(el) {
+      var d = el.getAttribute('data-date');
+      if (d < todayStr) el.style.display = 'none';
+    });
+
+    document.querySelectorAll('.schedule-month').forEach(function(heading) {
+      var table = heading.nextElementSibling;
+      if (!table || !table.classList.contains('schedule-table')) return;
+      var visibleRows = table.querySelectorAll('tbody tr:not([style*="display: none"])');
+      if (visibleRows.length === 0) {
+        heading.style.display = 'none';
+        table.style.display = 'none';
+      }
+    });
+  })();
 
   // Smooth scroll for anchor links on same page
   document.querySelectorAll('a[href^="#"]').forEach(a => {
