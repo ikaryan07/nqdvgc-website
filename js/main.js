@@ -182,6 +182,14 @@ document.addEventListener('DOMContentLoaded', () => {
       if (d < todayStr) el.style.display = 'none';
     });
 
+    var visibleCards = [];
+    document.querySelectorAll('.ev-card[data-date]').forEach(function(el) {
+      if (el.style.display !== 'none') visibleCards.push(el);
+    });
+    for (var i = 5; i < visibleCards.length; i++) {
+      visibleCards[i].style.display = 'none';
+    }
+
     document.querySelectorAll('.schedule-month').forEach(function(heading) {
       var table = heading.nextElementSibling;
       if (!table || !table.classList.contains('schedule-table')) return;
