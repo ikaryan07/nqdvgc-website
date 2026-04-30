@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nqdefenceveteransgolf.com.au/sitemap.xml
