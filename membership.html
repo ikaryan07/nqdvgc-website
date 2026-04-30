@@ -65,7 +65,7 @@
     <div class="reveal" style="background: var(--navy); border-radius: 12px; padding: 28px 32px; margin-bottom: 36px; max-width: 600px; margin-left: auto; margin-right: auto; text-align: center;">
       <h3 style="font-family: var(--font-display); font-size: 20px; color: var(--gold); margin-bottom: 8px;">Already a Member?</h3>
       <p style="font-size: 15px; color: rgba(255,255,255,0.8); margin-bottom: 16px;">Renew your membership — no need to fill out the form again.</p>
-      <a href="#" id="renewBtn" class="btn btn-gold" style="font-size: 16px; padding: 12px 32px;">Renew Membership — $50</a>
+      <a href="https://square.link/u/zsXy8lU7" target="_blank" rel="noopener" class="btn btn-gold" style="font-size: 16px; padding: 12px 32px; display: inline-block; text-decoration: none;">Renew Membership — $50</a>
     </div>
 
     <div class="membership-payment reveal" style="background: var(--sand); border-radius: 12px; padding: 28px 32px; margin-bottom: 36px; max-width: 600px; margin-left: auto; margin-right: auto; text-align: center;">
@@ -284,9 +284,9 @@
             msg.style.display = 'block';
             msg.style.color = '#4a5d3a';
             msg.style.background = 'rgba(74,93,58,0.1)';
-            msg.textContent = '\u2713 Application submitted! Redirecting to payment...';
+            msg.innerHTML = '\u2713 Application submitted! Opening payment...<br>If nothing happens, <a href="' + SQUARE_LINK + '" target="_blank" rel="noopener" style="font-weight:700;">tap here to pay $50</a>.';
             form.reset();
-            setTimeout(function() { window.open(SQUARE_LINK, '_blank'); }, 1000);
+            window.setTimeout(function() { window.location.assign(SQUARE_LINK); }, 600);
           } else {
             msg.style.display = 'block';
             msg.style.color = '#8b6914';
@@ -318,20 +318,6 @@
         allBtns.forEach(function(b) { b.disabled = false; });
         if (clickedBtn) clickedBtn.textContent = origText;
       });
-  });
-})();
-
-(function() {
-  var renewBtn = document.getElementById('renewBtn');
-  if (!renewBtn) return;
-  var SQUARE_LINK = 'https://square.link/u/zsXy8lU7';
-  renewBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    if (SQUARE_LINK) {
-      window.open(SQUARE_LINK, '_blank');
-    } else {
-      alert('Online payment is coming soon! Please pay via bank transfer or cash for now.\n\nBank: NQ Defence Veterans Golf Club Inc\nBSB: 833-205\nAccount: 20862889\nReference: Your full name');
-    }
   });
 })();
 </script>
