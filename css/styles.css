@@ -593,6 +593,7 @@ section { padding: var(--pad) 0; }
   flex-wrap: wrap;
 }
 .ev-disclaimer { font-size: 13px; color: var(--text-mid); font-style: italic; margin-top: 10px; margin-bottom: 0; }
+.membership-shirt-note { font-size: 14px; color: var(--text-mid); font-style: italic; margin: 16px 0 0; line-height: 1.5; }
 .ev-fb {
   display: inline-flex;
   align-items: center;
