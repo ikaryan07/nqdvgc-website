@@ -91,10 +91,7 @@
       <p class="membership-shirt-note"><em>Club shirts must be purchased on Wednesdays from the club committee.</em></p>
     </div>
 
-    <form id="membershipForm" action="https://formsubmit.co/nqdefenceveteransgc@gmail.com" method="POST" style="max-width: 700px; margin: 0 auto;" class="reveal">
-      <input type="hidden" name="_subject" value="New Membership Application — NQDVGC Website">
-      <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="_template" value="table">
+    <form id="membershipForm" method="POST" style="max-width: 700px; margin: 0 auto;" class="reveal">
 
       <div class="f-row">
         <div class="f-group">
@@ -196,7 +193,6 @@
         </label>
       </div>
 
-      <input type="hidden" name="_cc" id="mCc">
       <input type="hidden" name="Payment Method" id="mPayMethod" value="">
 
       <div style="margin-top: 28px; display: flex; flex-direction: column; gap: 12px;">
@@ -276,12 +272,8 @@
   form.addEventListener('submit', function(e) {
     e.preventDefault();
     var msg = document.getElementById('membershipMsg');
-    var emailField = document.getElementById('mEmail');
-    var ccField = document.getElementById('mCc');
     var nameField = document.getElementById('mFullName');
     var payField = document.getElementById('mPayMethod');
-
-    if (emailField && ccField) ccField.value = emailField.value;
 
     var labels = { square: 'Pay Now (Square)', bank: 'Bank Transfer', cash: 'Pay Cash Later' };
     if (payField) payField.value = labels[chosenMethod] || chosenMethod;
@@ -292,11 +284,8 @@
     var origText = clickedBtn ? clickedBtn.textContent : '';
     if (clickedBtn) clickedBtn.textContent = 'Submitting...';
 
-    var formData = new FormData(form);
-    fetch(form.action, { method: 'POST', body: formData, headers: { 'Accept': 'application/json' } })
-      .then(function(r) {
-        if (!r.ok) throw new Error('Failed');
-
+    web3formsSubmit(form, { subject: 'New Membership Application — NQDVGC Website' })
+      .then(function() {
         if (chosenMethod === 'square') {
           if (SQUARE_LINK) {
             msg.style.display = 'block';

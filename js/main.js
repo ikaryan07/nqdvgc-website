@@ -1,3 +1,30 @@
+(function() {
+  var WEB3FORMS_KEY = '33f74391-7271-4a62-9c4c-fbb792761be8';
+  var WEB3FORMS_URL = 'https://api.web3forms.com/submit';
+
+  window.web3formsSubmit = function(form, options) {
+    options = options || {};
+    var data = { access_key: WEB3FORMS_KEY };
+    if (options.subject) data.subject = options.subject;
+    var fd = new FormData(form);
+    fd.forEach(function(value, key) {
+      if (key.charAt(0) === '_') return;
+      data[key] = value;
+    });
+    if (data.Email && !data.email) data.email = data.Email;
+    if (data['Full Name'] && !data.name) data.name = data['Full Name'];
+    if (data.Name && !data.name) data.name = data.Name;
+    return fetch(WEB3FORMS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(function(r) { return r.json(); }).then(function(res) {
+      if (!res.success) throw new Error(res.message || 'Failed');
+      return res;
+    });
+  };
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
 
   // Mobile menu toggle
@@ -47,14 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
       var origText = btn.textContent;
       btn.textContent = 'Sending...';
       btn.disabled = true;
-      var formData = new FormData(this);
-      fetch(this.action, { method: 'POST', body: formData, headers: { 'Accept': 'application/json' } })
-        .then(function(r) {
-          if (r.ok) {
-            msg.style.display = 'block'; msg.style.color = '#4a5d3a';
-            msg.textContent = '\u2713 Thanks ' + n + '! We\'ll be in touch shortly.';
-            form.reset();
-          } else { throw new Error('Failed'); }
+      web3formsSubmit(this, { subject: 'New Contact Enquiry — NQDVGC Website' })
+        .then(function() {
+          msg.style.display = 'block'; msg.style.color = '#4a5d3a';
+          msg.textContent = '\u2713 Thanks ' + n + '! We\'ll be in touch shortly.';
+          form.reset();
         })
         .catch(function() {
           msg.style.display = 'block'; msg.style.color = '#8b2020';
@@ -127,23 +151,13 @@ document.addEventListener('DOMContentLoaded', () => {
       submitBtn.textContent = 'Sending...';
       submitBtn.disabled = true;
 
-      // Submit via FormSubmit.co
-      const formData = new FormData(this);
-      fetch(this.action, {
-        method: 'POST',
-        body: formData,
-        headers: { 'Accept': 'application/json' }
-      })
-      .then(response => {
-        if (response.ok) {
-          regMsg.style.display = 'block';
-          regMsg.style.color = '#4a5d3a';
-          regMsg.textContent = '\u2713 Thanks ' + name + '! You\'re registered. We\'ll be in touch with details.';
-          this.reset();
-          if (modalEventInput) modalEventInput.value = modalEventName.textContent;
-        } else {
-          throw new Error('Failed');
-        }
+      web3formsSubmit(this, { subject: 'New Event Registration — NQDVGC' })
+      .then(() => {
+        regMsg.style.display = 'block';
+        regMsg.style.color = '#4a5d3a';
+        regMsg.textContent = '\u2713 Thanks ' + name + '! You\'re registered. We\'ll be in touch with details.';
+        this.reset();
+        if (modalEventInput) modalEventInput.value = modalEventName.textContent;
       })
       .catch(() => {
         regMsg.style.display = 'block';
