@@ -1,26 +1,64 @@
 (function() {
   var WEB3FORMS_KEY = '33f74391-7271-4a62-9c4c-fbb792761be8';
   var WEB3FORMS_URL = 'https://api.web3forms.com/submit';
+  var FORMSUBMIT_URL = 'https://formsubmit.co/ajax/nqdefenceveteransgc@gmail.com';
+  var FETCH_TIMEOUT_MS = 20000;
 
-  window.web3formsSubmit = function(form, options) {
+  function fetchWithTimeout(url, options, ms) {
+    var controller = new AbortController();
+    var timer = setTimeout(function() { controller.abort(); }, ms || FETCH_TIMEOUT_MS);
+    return fetch(url, Object.assign({}, options, { signal: controller.signal }))
+      .finally(function() { clearTimeout(timer); });
+  }
+
+  function buildPayload(form, options) {
     options = options || {};
     var data = { access_key: WEB3FORMS_KEY };
     if (options.subject) data.subject = options.subject;
+    var lines = [];
     var fd = new FormData(form);
     fd.forEach(function(value, key) {
       if (key.charAt(0) === '_') return;
+      if (!value) return;
       data[key] = value;
+      lines.push(key + ': ' + value);
     });
     if (data.Email && !data.email) data.email = data.Email;
     if (data['Full Name'] && !data.name) data.name = data['Full Name'];
     if (data.Name && !data.name) data.name = data.Name;
-    return fetch(WEB3FORMS_URL, {
+    if (!data.message && lines.length) data.message = lines.join('\n');
+    return { data: data, formData: fd };
+  }
+
+  function submitFormSubmit(fd, subject) {
+    if (subject) fd.append('_subject', subject);
+    fd.append('_captcha', 'false');
+    fd.append('_template', 'table');
+    return fetchWithTimeout(FORMSUBMIT_URL, {
+      method: 'POST',
+      body: fd,
+      headers: { 'Accept': 'application/json' }
+    }).then(function(r) {
+      if (!r.ok) throw new Error('FormSubmit failed');
+      return r.json().catch(function() { return { success: true }; });
+    });
+  }
+
+  function submitWeb3Forms(data) {
+    return fetchWithTimeout(WEB3FORMS_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify(data)
     }).then(function(r) { return r.json(); }).then(function(res) {
-      if (!res.success) throw new Error(res.message || 'Failed');
+      if (!res.success) throw new Error(res.message || 'Web3Forms failed');
       return res;
+    });
+  }
+
+  window.web3formsSubmit = function(form, options) {
+    var payload = buildPayload(form, options);
+    return submitWeb3Forms(payload.data).catch(function() {
+      return submitFormSubmit(payload.formData, options.subject);
     });
   };
 })();
@@ -74,6 +112,9 @@ document.addEventListener('DOMContentLoaded', () => {
       var origText = btn.textContent;
       btn.textContent = 'Sending...';
       btn.disabled = true;
+      msg.style.display = 'block';
+      msg.style.color = '#555';
+      msg.textContent = 'Sending — please wait...';
       web3formsSubmit(this, { subject: 'New Contact Enquiry — NQDVGC Website' })
         .then(function() {
           msg.style.display = 'block'; msg.style.color = '#4a5d3a';
@@ -150,6 +191,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const originalText = submitBtn.textContent;
       submitBtn.textContent = 'Sending...';
       submitBtn.disabled = true;
+      regMsg.style.display = 'block';
+      regMsg.style.color = '#555';
+      regMsg.textContent = 'Sending — please wait...';
 
       web3formsSubmit(this, { subject: 'New Event Registration — NQDVGC' })
       .then(() => {

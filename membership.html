@@ -253,6 +253,8 @@
   </div>
 </footer>
 
+<script src="js/membership-config.js"></script>
+<script src="js/membership-tracker.js"></script>
 <script src="js/main.js"></script>
 <script>
 (function() {
@@ -275,6 +277,14 @@
     var nameField = document.getElementById('mFullName');
     var payField = document.getElementById('mPayMethod');
 
+    if (!chosenMethod) {
+      msg.style.display = 'block';
+      msg.style.color = '#8b2020';
+      msg.style.background = 'rgba(139,32,32,0.1)';
+      msg.textContent = 'Please choose how you would like to pay: Pay Now, Bank Transfer, or Cash Later.';
+      return;
+    }
+
     var labels = { square: 'Pay Now (Square)', bank: 'Bank Transfer', cash: 'Pay Cash Later' };
     if (payField) payField.value = labels[chosenMethod] || chosenMethod;
 
@@ -283,15 +293,23 @@
     var clickedBtn = form.querySelector('[data-method="' + chosenMethod + '"]');
     var origText = clickedBtn ? clickedBtn.textContent : '';
     if (clickedBtn) clickedBtn.textContent = 'Submitting...';
+    msg.style.display = 'block';
+    msg.style.color = '#555';
+    msg.style.background = 'rgba(0,0,0,0.05)';
+    msg.textContent = 'Sending your application — please wait...';
 
     web3formsSubmit(form, { subject: 'New Membership Application — NQDVGC Website' })
       .then(function() {
+        registerMembershipRecord(form);
+        var welcomeNote = (window.NQDVGC_MEMBERSHIP && window.NQDVGC_MEMBERSHIP.sheetWebhookUrl)
+          ? '<br><span style="font-size:14px;font-weight:400;">A welcome email has been sent to you with your renewal date.</span>'
+          : '';
         if (chosenMethod === 'square') {
           if (SQUARE_LINK) {
             msg.style.display = 'block';
             msg.style.color = '#4a5d3a';
             msg.style.background = 'rgba(74,93,58,0.1)';
-            msg.innerHTML = '\u2713 Application submitted! Opening payment...<br>If nothing happens, <a href="' + SQUARE_LINK + '" target="_blank" rel="noopener" style="font-weight:700;">tap here to pay $50</a>.';
+            msg.innerHTML = '\u2713 Application submitted! Opening payment...<br>If nothing happens, <a href="' + SQUARE_LINK + '" target="_blank" rel="noopener" style="font-weight:700;">tap here to pay $50</a>.' + welcomeNote;
             form.reset();
             window.setTimeout(function() { window.location.assign(SQUARE_LINK); }, 600);
           } else {
@@ -305,13 +323,13 @@
           msg.style.display = 'block';
           msg.style.color = '#4a5d3a';
           msg.style.background = 'rgba(74,93,58,0.1)';
-          msg.innerHTML = '\u2713 Thanks ' + (nameField.value || '') + '! Your application has been submitted.<br><br><strong>Bank Transfer Details:</strong><br>Account Name: NQ Defence Veterans Golf Club Inc<br>BSB: 833-205<br>Account No: 20862889<br>Reference: Your full name';
+          msg.innerHTML = '\u2713 Thanks ' + (nameField.value || '') + '! Your application has been submitted.' + welcomeNote + '<br><br><strong>Bank Transfer Details:</strong><br>Account Name: NQ Defence Veterans Golf Club Inc<br>BSB: 833-205<br>Account No: 20862889<br>Reference: Your full name';
           form.reset();
         } else {
           msg.style.display = 'block';
           msg.style.color = '#4a5d3a';
           msg.style.background = 'rgba(74,93,58,0.1)';
-          msg.textContent = '\u2713 Thanks ' + (nameField.value || '') + '! Your application has been submitted. Please pay $50 cash at your next golf day.';
+          msg.innerHTML = '\u2713 Thanks ' + (nameField.value || '') + '! Your application has been submitted. Please pay $50 cash at your next golf day.' + welcomeNote;
           form.reset();
         }
       })
@@ -319,7 +337,7 @@
         msg.style.display = 'block';
         msg.style.color = '#8b2020';
         msg.style.background = 'rgba(139,32,32,0.1)';
-        msg.textContent = 'Something went wrong. Please try again or email us directly at nqdefenceveteransgc@gmail.com';
+        msg.innerHTML = 'Something went wrong (the server took too long to respond). Please try again in a moment, or email your details directly to <a href="mailto:nqdefenceveteransgc@gmail.com">nqdefenceveteransgc@gmail.com</a>.';
       })
       .finally(function() {
         allBtns.forEach(function(b) { b.disabled = false; });
