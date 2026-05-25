@@ -361,6 +361,20 @@ section { padding: var(--pad) 0; }
   object-fit: cover;
   display: block;
 }
+.about-slideshow .about-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  z-index: 0;
+}
+.about-slideshow .about-slide.is-active {
+  opacity: 1;
+  z-index: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-slideshow .about-slide { transition: none; }
+}
 .about-visual::before {
   content: '';
   position: absolute; inset: 12px;
