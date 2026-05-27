@@ -11,6 +11,10 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.web3forms.com https://formsubmit.co https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; base-uri 'self'; form-action 'self'">
 <title>Membership | NQ Defence Veterans Golf Club Inc.</title>
 <meta name="description" content="Join NQ Defence Veterans Golf Club Inc. for $50/year — membership application for ADF veterans in Townsville. Weekly golf days and a supportive veteran community. Club shirts sold separately on Wednesdays.">
 <meta name="keywords" content="join veterans golf club Townsville, NQDVGC membership, defence veterans golf membership, golf club membership Townsville">
@@ -92,6 +96,10 @@
     </div>
 
     <form id="membershipForm" method="POST" style="max-width: 700px; margin: 0 auto;" class="reveal">
+      <div class="form-honeypot" aria-hidden="true">
+        <label for="mBotcheck">Leave blank</label>
+        <input type="text" name="botcheck" id="mBotcheck" tabindex="-1" autocomplete="off">
+      </div>
 
       <div class="f-row">
         <div class="f-group">
@@ -189,7 +197,7 @@
       <div class="f-group" style="margin-top: 8px; padding: 16px 20px; background: var(--sand); border-radius: 8px;">
         <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; font-weight: 400; font-size: 14px; line-height: 1.5; color: var(--text-mid);">
           <input type="checkbox" id="mPrivacy" name="Privacy Consent" value="Yes" required style="margin-top: 4px; min-width: 20px; min-height: 20px;">
-          I consent to NQ Defence Veterans Golf Club collecting and using my personal information as described in the Privacy Disclosure Statement to process my membership and provide membership services.
+          I consent to NQ Defence Veterans Golf Club collecting and using my personal information as described in the <a href="privacy.html" target="_blank" rel="noopener">Privacy Disclosure Statement</a> to process my membership and provide membership services.
         </label>
       </div>
 
@@ -254,8 +262,6 @@
   </div>
 </footer>
 
-<script src="js/membership-config.js"></script>
-<script src="js/membership-tracker.js"></script>
 <script src="js/main.js"></script>
 <script>
 (function() {
@@ -264,6 +270,7 @@
 
   var SQUARE_LINK = 'https://square.link/u/zsXy8lU7';
   var chosenMethod = '';
+  var esc = window.escapeHtml || function(s) { return String(s); };
 
   var buttons = form.querySelectorAll('.f-submit');
   buttons.forEach(function(btn) {
@@ -277,6 +284,7 @@
     var msg = document.getElementById('membershipMsg');
     var nameField = document.getElementById('mFullName');
     var payField = document.getElementById('mPayMethod');
+    var memberName = esc((nameField && nameField.value) || '');
 
     if (!chosenMethod) {
       msg.style.display = 'block';
@@ -301,16 +309,12 @@
 
     web3formsSubmit(form, { subject: 'New Membership Application — NQDVGC Website' })
       .then(function() {
-        registerMembershipRecord(form);
-        var welcomeNote = (window.NQDVGC_MEMBERSHIP && window.NQDVGC_MEMBERSHIP.sheetWebhookUrl)
-          ? '<br><span style="font-size:14px;font-weight:400;">A welcome email has been sent to you with your renewal date.</span>'
-          : '';
         if (chosenMethod === 'square') {
           if (SQUARE_LINK) {
             msg.style.display = 'block';
             msg.style.color = '#4a5d3a';
             msg.style.background = 'rgba(74,93,58,0.1)';
-            msg.innerHTML = '\u2713 Application submitted! Opening payment...<br>If nothing happens, <a href="' + SQUARE_LINK + '" target="_blank" rel="noopener" style="font-weight:700;">tap here to pay $50</a>.' + welcomeNote;
+            msg.innerHTML = '\u2713 Application submitted! Opening payment...<br>If nothing happens, <a href="' + esc(SQUARE_LINK) + '" target="_blank" rel="noopener" style="font-weight:700;">tap here to pay $50</a>.';
             form.reset();
             window.setTimeout(function() { window.location.assign(SQUARE_LINK); }, 600);
           } else {
@@ -324,13 +328,13 @@
           msg.style.display = 'block';
           msg.style.color = '#4a5d3a';
           msg.style.background = 'rgba(74,93,58,0.1)';
-          msg.innerHTML = '\u2713 Thanks ' + (nameField.value || '') + '! Your application has been submitted.' + welcomeNote + '<br><br><strong>Bank Transfer Details:</strong><br>Account Name: NQ Defence Veterans Golf Club Inc<br>BSB: 833-205<br>Account No: 20862889<br>Reference: Your full name';
+          msg.innerHTML = '\u2713 Thanks ' + memberName + '! Your application has been submitted.<br><br><strong>Bank Transfer Details:</strong><br>Account Name: NQ Defence Veterans Golf Club Inc<br>BSB: 833-205<br>Account No: 20862889<br>Reference: Your full name';
           form.reset();
         } else {
           msg.style.display = 'block';
           msg.style.color = '#4a5d3a';
           msg.style.background = 'rgba(74,93,58,0.1)';
-          msg.innerHTML = '\u2713 Thanks ' + (nameField.value || '') + '! Your application has been submitted. Please pay $50 cash at your next golf day.' + welcomeNote;
+          msg.innerHTML = '\u2713 Thanks ' + memberName + '! Your application has been submitted. Please pay $50 cash at your next golf day.';
           form.reset();
         }
       })

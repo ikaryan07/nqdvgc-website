@@ -2,8 +2,8 @@
 /*.jpg
 /*.jpeg
 
-# Build scripts
-build_brief_pdf.py
+# Build scripts (not published — _reports/ is excluded from GitHub Pages)
+_reports/
 
 # OS files
 Thumbs.db

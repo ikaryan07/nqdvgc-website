@@ -1,6 +1,7 @@
 /**
  * NQDVGC Membership tracker + renewal emails
- * Setup: see docs/membership-renewal-setup.md
+ * Setup: see _docs/membership-renewal-setup.md
+ * Never expose WEBHOOK_SECRET in website JavaScript — use Web3Forms webhook instead.
  */
 
 var CONFIG = {

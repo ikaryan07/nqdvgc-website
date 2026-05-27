@@ -4,11 +4,25 @@
   var FORMSUBMIT_URL = 'https://formsubmit.co/ajax/nqdefenceveteransgc@gmail.com';
   var FETCH_TIMEOUT_MS = 20000;
 
+  window.escapeHtml = function(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  };
+
   function fetchWithTimeout(url, options, ms) {
     var controller = new AbortController();
     var timer = setTimeout(function() { controller.abort(); }, ms || FETCH_TIMEOUT_MS);
     return fetch(url, Object.assign({}, options, { signal: controller.signal }))
       .finally(function() { clearTimeout(timer); });
+  }
+
+  function isHoneypotTripped(form) {
+    var honeypot = form.querySelector('[name="botcheck"]');
+    return honeypot && honeypot.value.trim() !== '';
   }
 
   function buildPayload(form, options) {
@@ -19,6 +33,7 @@
     var fd = new FormData(form);
     fd.forEach(function(value, key) {
       if (key.charAt(0) === '_') return;
+      if (key === 'botcheck') return;
       if (!value) return;
       data[key] = value;
       lines.push(key + ': ' + value);
@@ -32,7 +47,6 @@
 
   function submitFormSubmit(fd, subject) {
     if (subject) fd.append('_subject', subject);
-    fd.append('_captcha', 'false');
     fd.append('_template', 'table');
     return fetchWithTimeout(FORMSUBMIT_URL, {
       method: 'POST',
@@ -56,6 +70,9 @@
   }
 
   window.web3formsSubmit = function(form, options) {
+    if (isHoneypotTripped(form)) {
+      return Promise.reject(new Error('Invalid submission'));
+    }
     var payload = buildPayload(form, options);
     return submitWeb3Forms(payload.data).catch(function() {
       return submitFormSubmit(payload.formData, options.subject);

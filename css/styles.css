@@ -1091,6 +1091,16 @@ section { padding: var(--pad) 0; }
   font-weight: 700; cursor: pointer; transition: all 0.25s;
 }
 .f-submit:hover { background: var(--navy-deep); transform: translateY(-2px); }
+
+.form-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
 #formMsg { margin-top: 14px; text-align: center; font-size: 15px; display: none; }
 
 /* ========== CTA BANNER ========== */

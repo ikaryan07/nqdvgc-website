@@ -11,6 +11,10 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.web3forms.com https://formsubmit.co https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; base-uri 'self'; form-action 'self'">
 <title>Events | NQ Defence Veterans Golf Club Inc.</title>
 <meta name="description" content="Upcoming golf events, competitions and social days at NQ Defence Veterans Golf Club Inc., Townsville. Weekly Wednesday golf at Tropics Golf Course.">
 <meta name="keywords" content="veterans golf events Townsville, golf competitions, Tropics Golf Course, NQDVGC events, defence veterans golf days">
@@ -622,6 +626,10 @@
     </div>
     <div class="modal-body">
       <form id="regForm" method="POST">
+        <div class="form-honeypot" aria-hidden="true">
+          <label for="regBotcheck">Leave blank</label>
+          <input type="text" name="botcheck" id="regBotcheck" tabindex="-1" autocomplete="off">
+        </div>
         <input type="hidden" name="Event" id="regEventField" value="">
         <div class="f-group">
           <label for="regName">Full Name *</label>
