@@ -232,29 +232,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Single "Add to Calendar" button per event, device-aware so it actually
-  // lands in the user's calendar with one tap:
-  //   iOS    -> webcal:// link (forces Apple Calendar to open; a plain https
-  //             .ics just downloads to Files on iOS 13+).
-  //   macOS  -> hosted .ics file (Safari opens Calendar cleanly).
-  //   other  -> Google Calendar template URL.
-  // The slug()/filename logic MUST stay in sync with _scripts/generate-ics.js.
+  // Single "Add to Calendar" button per event -> Google Calendar template URL.
+  // One tap, works on every device (iPhone, Android, desktop).
   (function() {
     var cards = document.querySelectorAll('.ev-card[data-date]');
     if (!cards.length) return;
-
-    var ua = navigator.userAgent || '';
-    var isIOS = /iPad|iPhone|iPod/.test(ua) ||
-      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    var isMac = !isIOS && /Macintosh/.test(ua);
-
-    // Directory the site is served from (handles custom domain and project pages).
-    var baseDir = location.pathname.replace(/[^/]*$/, '');
-    // Canonical apex host — iOS calendar subscription won't follow the www->apex
-    // 301 redirect, so the webcal link must point straight at the apex domain.
-    var icsHost = (location.host && location.host.indexOf('github.io') === -1)
-      ? 'nqdefenceveteransgolf.com.au'
-      : location.host;
 
     function pad(n) { return n < 10 ? '0' + n : '' + n; }
     function ymd(dateStr, addDays) {
@@ -262,9 +244,6 @@ document.addEventListener('DOMContentLoaded', () => {
       var d = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2]));
       if (addDays) d.setUTCDate(d.getUTCDate() + addDays);
       return d.getUTCFullYear() + pad(d.getUTCMonth() + 1) + pad(d.getUTCDate());
-    }
-    function slug(s) {
-      return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'event';
     }
     var calIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zm12 7v10H5V9h14z"/></svg>';
 
@@ -280,25 +259,17 @@ document.addEventListener('DOMContentLoaded', () => {
       var metaSpan = card.querySelector('.ev-meta span');
       var location = metaSpan ? metaSpan.textContent.replace(/[^\x20-\x7E]/g, '').trim() : 'Tropics Golf Course';
       var summary = title + ' \u2014 NQDVGC';
-      var icsPath = baseDir + 'events/' + slug(title) + '-' + dateStr + '.ics';
 
       var a = document.createElement('a');
       a.className = 'ev-cal';
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.href = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+        '&text=' + encodeURIComponent(summary) +
+        '&dates=' + ymd(dateStr) + '/' + ymd(dateStr, 1) +
+        '&details=' + encodeURIComponent(desc) +
+        '&location=' + encodeURIComponent(location);
       a.innerHTML = calIcon + 'Add to Calendar';
-
-      if (isIOS) {
-        a.href = 'webcal://' + icsHost + icsPath;
-      } else if (isMac) {
-        a.href = icsPath;
-      } else {
-        a.target = '_blank';
-        a.rel = 'noopener';
-        a.href = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
-          '&text=' + encodeURIComponent(summary) +
-          '&dates=' + ymd(dateStr) + '/' + ymd(dateStr, 1) +
-          '&details=' + encodeURIComponent(desc) +
-          '&location=' + encodeURIComponent(location);
-      }
 
       actions.appendChild(a);
     });
