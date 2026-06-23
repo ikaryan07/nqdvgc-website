@@ -675,9 +675,6 @@ section { padding: var(--pad) 0; }
 .ev-actions .ev-cal:hover { background: var(--gold); color: var(--navy); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(200,168,78,0.3); }
 .ev-cal svg { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; }
 
-.ev-actions .ev-cal-google { color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.3); }
-.ev-actions .ev-cal-google:hover { background: rgba(255,255,255,0.12); color: var(--white); border-color: rgba(255,255,255,0.55); box-shadow: none; }
-
 /* ---- Registration Modal ---- */
 .modal-overlay {
   display: none;

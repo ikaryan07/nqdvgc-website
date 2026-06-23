@@ -116,6 +116,7 @@ for (const card of cards) {
     'PRODID:-//NQDVGC//Events//EN',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
+    'X-WR-CALNAME:' + escICS(summary),
     'BEGIN:VEVENT',
     'UID:' + card.date + '-' + slug(title) + '@nqdefenceveteransgolf.com.au',
     'DTSTAMP:' + stamp,

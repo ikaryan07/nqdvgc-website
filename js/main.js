@@ -232,14 +232,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Add-to-calendar links on event cards.
-  // Apple/Outlook -> hosted .ics file (only method iOS Safari handles reliably;
-  //   data: URIs and blobs are blocked/ignored on iPhone).
-  // Google -> calendar template URL.
+  // Single "Add to Calendar" button per event, device-aware so it actually
+  // lands in the user's calendar with one tap:
+  //   iOS    -> webcal:// link (forces Apple Calendar to open; a plain https
+  //             .ics just downloads to Files on iOS 13+).
+  //   macOS  -> hosted .ics file (Safari opens Calendar cleanly).
+  //   other  -> Google Calendar template URL.
   // The slug()/filename logic MUST stay in sync with _scripts/generate-ics.js.
   (function() {
     var cards = document.querySelectorAll('.ev-card[data-date]');
     if (!cards.length) return;
+
+    var ua = navigator.userAgent || '';
+    var isIOS = /iPad|iPhone|iPod/.test(ua) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var isMac = !isIOS && /Macintosh/.test(ua);
+
+    // Directory the site is served from (handles custom domain and project pages).
+    var baseDir = location.pathname.replace(/[^/]*$/, '');
 
     function pad(n) { return n < 10 ? '0' + n : '' + n; }
     function ymd(dateStr, addDays) {
@@ -265,25 +275,27 @@ document.addEventListener('DOMContentLoaded', () => {
       var metaSpan = card.querySelector('.ev-meta span');
       var location = metaSpan ? metaSpan.textContent.replace(/[^\x20-\x7E]/g, '').trim() : 'Tropics Golf Course';
       var summary = title + ' \u2014 NQDVGC';
+      var icsPath = baseDir + 'events/' + slug(title) + '-' + dateStr + '.ics';
 
-      var apple = document.createElement('a');
-      apple.className = 'ev-cal';
-      apple.href = 'events/' + slug(title) + '-' + dateStr + '.ics';
-      apple.innerHTML = calIcon + 'Apple / Outlook';
+      var a = document.createElement('a');
+      a.className = 'ev-cal';
+      a.innerHTML = calIcon + 'Add to Calendar';
 
-      var google = document.createElement('a');
-      google.className = 'ev-cal ev-cal-google';
-      google.target = '_blank';
-      google.rel = 'noopener';
-      google.href = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
-        '&text=' + encodeURIComponent(summary) +
-        '&dates=' + ymd(dateStr) + '/' + ymd(dateStr, 1) +
-        '&details=' + encodeURIComponent(desc) +
-        '&location=' + encodeURIComponent(location);
-      google.innerHTML = calIcon + 'Google';
+      if (isIOS) {
+        a.href = 'webcal://' + location.host + icsPath;
+      } else if (isMac) {
+        a.href = icsPath;
+      } else {
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.href = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+          '&text=' + encodeURIComponent(summary) +
+          '&dates=' + ymd(dateStr) + '/' + ymd(dateStr, 1) +
+          '&details=' + encodeURIComponent(desc) +
+          '&location=' + encodeURIComponent(location);
+      }
 
-      actions.appendChild(apple);
-      actions.appendChild(google);
+      actions.appendChild(a);
     });
   })();
 
