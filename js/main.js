@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Add-to-calendar buttons on event cards (Google link + .ics download)
+  // Add-to-calendar link on event cards (Google Calendar template — works on all devices)
   (function() {
     var cards = document.querySelectorAll('.ev-card[data-date]');
     if (!cards.length) return;
@@ -244,17 +244,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (addDays) d.setUTCDate(d.getUTCDate() + addDays);
       return d.getUTCFullYear() + pad(d.getUTCMonth() + 1) + pad(d.getUTCDate());
     }
-    function escICS(s) {
-      return String(s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
-    }
-    function slug(s) {
-      return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'event';
-    }
-
-    var openMenu = null;
-    document.addEventListener('click', function() {
-      if (openMenu) { openMenu.menu.hidden = true; openMenu.btn.setAttribute('aria-expanded', 'false'); openMenu = null; }
-    });
 
     cards.forEach(function(card) {
       var actions = card.querySelector('.ev-actions');
@@ -269,68 +258,17 @@ document.addEventListener('DOMContentLoaded', () => {
       var location = metaSpan ? metaSpan.textContent.replace(/[^\x20-\x7E]/g, '').trim() : 'Tropics Golf Course';
       var summary = title + ' \u2014 NQDVGC';
 
-      var wrap = document.createElement('div');
-      wrap.className = 'ev-cal-wrap';
-
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'ev-cal';
-      btn.setAttribute('aria-haspopup', 'true');
-      btn.setAttribute('aria-expanded', 'false');
-      btn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zm12 7v10H5V9h14z"/></svg>Add to Calendar';
-
-      var menu = document.createElement('div');
-      menu.className = 'ev-cal-menu';
-      menu.hidden = true;
-
-      var gcal = document.createElement('a');
-      gcal.className = 'ev-cal-opt';
-      gcal.target = '_blank';
-      gcal.rel = 'noopener';
-      gcal.textContent = 'Google Calendar';
-      gcal.href = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+      var a = document.createElement('a');
+      a.className = 'ev-cal';
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.href = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
         '&text=' + encodeURIComponent(summary) +
         '&dates=' + ymd(dateStr) + '/' + ymd(dateStr, 1) +
         '&details=' + encodeURIComponent(desc) +
         '&location=' + encodeURIComponent(location);
-
-      var ics = [
-        'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//NQDVGC//Events//EN', 'CALSCALE:GREGORIAN',
-        'BEGIN:VEVENT',
-        'UID:' + dateStr + '-' + slug(title) + '@nqdefenceveteransgolf.com.au',
-        'DTSTAMP:' + ymd(dateStr) + 'T000000Z',
-        'DTSTART;VALUE=DATE:' + ymd(dateStr),
-        'DTEND;VALUE=DATE:' + ymd(dateStr, 1),
-        'SUMMARY:' + escICS(summary),
-        'LOCATION:' + escICS(location),
-        'DESCRIPTION:' + escICS(desc),
-        'END:VEVENT', 'END:VCALENDAR'
-      ].join('\r\n');
-
-      var ical = document.createElement('a');
-      ical.className = 'ev-cal-opt';
-      ical.textContent = 'Apple / Outlook (.ics)';
-      ical.href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
-      ical.setAttribute('download', slug(title) + '-' + dateStr + '.ics');
-
-      menu.appendChild(gcal);
-      menu.appendChild(ical);
-      wrap.appendChild(btn);
-      wrap.appendChild(menu);
-      actions.appendChild(wrap);
-
-      btn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        var willOpen = menu.hidden;
-        if (openMenu && openMenu.menu !== menu) {
-          openMenu.menu.hidden = true;
-          openMenu.btn.setAttribute('aria-expanded', 'false');
-        }
-        menu.hidden = !willOpen;
-        btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-        openMenu = willOpen ? { menu: menu, btn: btn } : null;
-      });
-      menu.addEventListener('click', function(e) { e.stopPropagation(); });
+      a.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zm12 7v10H5V9h14z"/></svg>Add to Calendar';
+      actions.appendChild(a);
     });
   })();
 
