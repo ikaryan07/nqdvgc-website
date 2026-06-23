@@ -250,6 +250,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Directory the site is served from (handles custom domain and project pages).
     var baseDir = location.pathname.replace(/[^/]*$/, '');
+    // Canonical apex host — iOS calendar subscription won't follow the www->apex
+    // 301 redirect, so the webcal link must point straight at the apex domain.
+    var icsHost = (location.host && location.host.indexOf('github.io') === -1)
+      ? 'nqdefenceveteransgolf.com.au'
+      : location.host;
 
     function pad(n) { return n < 10 ? '0' + n : '' + n; }
     function ymd(dateStr, addDays) {
@@ -282,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
       a.innerHTML = calIcon + 'Add to Calendar';
 
       if (isIOS) {
-        a.href = 'webcal://' + location.host + icsPath;
+        a.href = 'webcal://' + icsHost + icsPath;
       } else if (isMac) {
         a.href = icsPath;
       } else {
