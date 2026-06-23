@@ -232,7 +232,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Add-to-calendar link on event cards (Google Calendar template — works on all devices)
+  // Add-to-calendar links on event cards.
+  // Apple/Outlook -> hosted .ics file (only method iOS Safari handles reliably;
+  //   data: URIs and blobs are blocked/ignored on iPhone).
+  // Google -> calendar template URL.
+  // The slug()/filename logic MUST stay in sync with _scripts/generate-ics.js.
   (function() {
     var cards = document.querySelectorAll('.ev-card[data-date]');
     if (!cards.length) return;
@@ -244,6 +248,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (addDays) d.setUTCDate(d.getUTCDate() + addDays);
       return d.getUTCFullYear() + pad(d.getUTCMonth() + 1) + pad(d.getUTCDate());
     }
+    function slug(s) {
+      return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'event';
+    }
+    var calIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zm12 7v10H5V9h14z"/></svg>';
 
     cards.forEach(function(card) {
       var actions = card.querySelector('.ev-actions');
@@ -258,17 +266,24 @@ document.addEventListener('DOMContentLoaded', () => {
       var location = metaSpan ? metaSpan.textContent.replace(/[^\x20-\x7E]/g, '').trim() : 'Tropics Golf Course';
       var summary = title + ' \u2014 NQDVGC';
 
-      var a = document.createElement('a');
-      a.className = 'ev-cal';
-      a.target = '_blank';
-      a.rel = 'noopener';
-      a.href = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+      var apple = document.createElement('a');
+      apple.className = 'ev-cal';
+      apple.href = 'events/' + slug(title) + '-' + dateStr + '.ics';
+      apple.innerHTML = calIcon + 'Apple / Outlook';
+
+      var google = document.createElement('a');
+      google.className = 'ev-cal ev-cal-google';
+      google.target = '_blank';
+      google.rel = 'noopener';
+      google.href = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
         '&text=' + encodeURIComponent(summary) +
         '&dates=' + ymd(dateStr) + '/' + ymd(dateStr, 1) +
         '&details=' + encodeURIComponent(desc) +
         '&location=' + encodeURIComponent(location);
-      a.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zm12 7v10H5V9h14z"/></svg>Add to Calendar';
-      actions.appendChild(a);
+      google.innerHTML = calIcon + 'Google';
+
+      actions.appendChild(apple);
+      actions.appendChild(google);
     });
   })();
 
