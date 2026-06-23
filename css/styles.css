@@ -656,6 +656,24 @@ section { padding: var(--pad) 0; }
 }
 .ev-register:hover { background: rgba(255,255,255,0.15); border-color: var(--gold); color: var(--gold-light); transform: translateY(-1px); }
 
+.ev-cal {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  min-height: 44px;
+  background: transparent;
+  color: var(--gold-light);
+  font-size: 14px;
+  font-weight: 700;
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.ev-cal:hover { background: var(--gold); color: var(--navy); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(200,168,78,0.3); }
+.ev-cal svg { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; }
+
 /* ---- Registration Modal ---- */
 .modal-overlay {
   display: none;

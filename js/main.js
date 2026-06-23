@@ -232,6 +232,72 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Add-to-calendar (.ics) buttons on event cards
+  (function() {
+    var cards = document.querySelectorAll('.ev-card[data-date]');
+    if (!cards.length) return;
+
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
+    function icsDate(dateStr, addDays) {
+      var p = dateStr.split('-');
+      var d = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2]));
+      if (addDays) d.setUTCDate(d.getUTCDate() + addDays);
+      return d.getUTCFullYear() + pad(d.getUTCMonth() + 1) + pad(d.getUTCDate());
+    }
+    function escICS(s) {
+      return String(s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
+    }
+    function slug(s) {
+      return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'event';
+    }
+
+    cards.forEach(function(card) {
+      var actions = card.querySelector('.ev-actions');
+      var dateStr = card.getAttribute('data-date');
+      if (!actions || !dateStr) return;
+
+      var titleEl = card.querySelector('h3');
+      var title = titleEl ? titleEl.textContent.trim() : 'NQDVGC Event';
+      var descEl = card.querySelector('.ev-body > p');
+      var desc = descEl ? descEl.textContent.trim() : '';
+      var metaSpan = card.querySelector('.ev-meta span');
+      var location = metaSpan ? metaSpan.textContent.replace(/[^\x20-\x7E]/g, '').trim() : 'Tropics Golf Course';
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'ev-cal';
+      btn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zm12 7v10H5V9h14z"/></svg>Add to Calendar';
+      btn.addEventListener('click', function() {
+        var ics = [
+          'BEGIN:VCALENDAR',
+          'VERSION:2.0',
+          'PRODID:-//NQDVGC//Events//EN',
+          'CALSCALE:GREGORIAN',
+          'BEGIN:VEVENT',
+          'UID:' + dateStr + '-' + slug(title) + '@nqdefenceveteransgolf.com.au',
+          'DTSTAMP:' + icsDate(dateStr) + 'T000000Z',
+          'DTSTART;VALUE=DATE:' + icsDate(dateStr),
+          'DTEND;VALUE=DATE:' + icsDate(dateStr, 1),
+          'SUMMARY:' + escICS(title + ' \u2014 NQDVGC'),
+          'LOCATION:' + escICS(location),
+          'DESCRIPTION:' + escICS(desc),
+          'END:VEVENT',
+          'END:VCALENDAR'
+        ].join('\r\n');
+        var blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = slug(title) + '-' + dateStr + '.ics';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+      });
+      actions.appendChild(btn);
+    });
+  })();
+
   // Back to top button
   var btt = document.createElement('button');
   btt.className = 'back-to-top';
